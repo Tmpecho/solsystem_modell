@@ -8,13 +8,17 @@ FONT_SIZE: int = 20
 gamma: float = 6.674010551359e-11
 AU: float = 1.495978707e11
 LINE_SKIP_FACTOR: int = 1
+SCALE_FACTOR: int = 100
+DEFAULT_OBJECT_SIZE: int = 5
+SIZE_SCALING_FACTOR = 100
 
 # Colors
 WHITE: tuple = (255, 255, 255)
 BLACK: tuple = (0, 0, 0)
 
 # Settings
-DEBUG_MODE: bool = False
+DEBUG_MODE: bool = True
 IS_SUN_STATIONARY: bool = True
-zoom: float = 1.5
+zoom: float = 15
 time_acceleration: int = 1000000
+TO_SCALE: bool = False

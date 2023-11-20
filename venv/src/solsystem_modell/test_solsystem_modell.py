@@ -1,10 +1,10 @@
-from unittest import TestCase
+import unittest
 import solsystem_modell as sm
 import modell_config as config
 import numpy as np
 
 
-class TestCelestialBody(TestCase):
+class TestCelestialBody(unittest.TestCase):
     def setUp(self):
         self.earth = sm.CelestialBody(sm.Appearance("Earth", (0, 0, 255), 5),
                                       sm.CelestialBodyData(5.9722e24, 1.496e11, 0, 29784.8, np.pi / 2, 800))
@@ -80,7 +80,7 @@ class TestCelestialBody(TestCase):
         self.assertEqual(calculated_velocity_norm, 0)
 
 
-class TestSimulation(TestCase):
+class TestSimulation(unittest.TestCase):
     def setUp(self):
         self.simulation = sm.Simulation()
         self.simulation.initialize_simulation()
@@ -111,3 +111,7 @@ class TestSimulation(TestCase):
         self.simulation.update_trail(10000)
         for celestial_body in initial_trails:
             self.assertNotEqual(len(celestial_body.positions), initial_trails[celestial_body])
+
+
+if __name__ == '__main__':
+    unittest.main()
