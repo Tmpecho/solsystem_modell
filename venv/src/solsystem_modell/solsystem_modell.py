@@ -129,7 +129,6 @@ class CelestialBody:
 # TODO: Graph distance between Uranus and Uranus without Neptune
 class Simulation:
     """A class representing the simulation"""
-
     def __init__(self) -> None:
         self.celestial_bodies = []
         self.screen = None
@@ -307,20 +306,28 @@ def create_planets(real_height: float, real_width) -> list[CelestialBody]:
     planets = [
         CelestialBody(Appearance("Sun", (255, 255, 0), 696340 * 10 ** 3),
                       CelestialBodyData(1.98847e30, sun_x, sun_y, 0, 0, 100)),
+
         CelestialBody(Appearance("Mercury", (255, 0, 0), 2440 * 10 ** 3),
                       CelestialBodyData(3.3011e23, sun_x + 0.387 * config.AU, sun_y, 47362, np.pi / 2, 200)),
+
         CelestialBody(Appearance("Venus", (255, 165, 0), 6052 * 10 ** 3),
                       CelestialBodyData(4.8675e24, sun_x + 0.723 * config.AU, sun_y, 35021.4, np.pi / 2, 600)),
+
         CelestialBody(Appearance("Earth", (0, 0, 255), 6371 * 10 ** 3),
                       CelestialBodyData(5.9722e24, sun_x + 1.496e11, sun_y, 29784.8, np.pi / 2, 800)),
+
         CelestialBody(Appearance("Mars", (255, 0, 0), 3390 * 10 ** 3),
                       CelestialBodyData(6.4171e23, sun_x + 1.52 * config.AU, sun_y, 24130.8, np.pi / 2, 2000)),
+
         CelestialBody(Appearance("Jupiter", (255, 222, 173), 69911 * 10 ** 3),
                       CelestialBodyData(1.8982e27, sun_x + 5.203 * config.AU, sun_y, 13070, np.pi / 2, 10000)),
+
         CelestialBody(Appearance("Saturn", (210, 180, 140), 58232 * 10 ** 3),
                       CelestialBodyData(5.6834e26, sun_x + 9.539 * config.AU, sun_y, 9690, np.pi / 2, 20000)),
+
         CelestialBody(Appearance("Uranus", (0, 0, 128), 25362 * 10 ** 3),
                       CelestialBodyData(8.6810e25, sun_x + 19.18 * config.AU, sun_y, 6810, np.pi / 2, 50000)),
+
         CelestialBody(Appearance("Neptune", (0, 0, 255), 24622 * 10 ** 3),
                       CelestialBodyData(1.02413e26, sun_x + 30.06 * config.AU, sun_y, 5430, np.pi / 2, 200000))
     ]
