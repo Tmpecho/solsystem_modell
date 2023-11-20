@@ -42,10 +42,10 @@ class CelestialBody:
         self.name = appearance.name
         self.color = appearance.color
         if config.TO_SCALE:
-            self.size = appearance.radius / config.AU * config.zoom * config.SCALE_FACTOR
+            self.size = appearance.radius / config.AU * config.ZOOM * config.SCALE_FACTOR
         else:
             self.size = config.DEFAULT_OBJECT_SIZE * np.log(
-                appearance.radius) / config.SIZE_SCALING_FACTOR * config.zoom
+                appearance.radius) / config.SIZE_SCALING_FACTOR * config.ZOOM
         self.mass = celestial_body_data.mass
         self.position = np.array([celestial_body_data.x_pos, celestial_body_data.y_pos], dtype=np.float64)
         self.velocity = np.array([celestial_body_data.velocity * np.cos(celestial_body_data.direction),
@@ -66,7 +66,7 @@ class CelestialBody:
         if distance == 0:
             return np.zeros(2, dtype=np.float64)
 
-        force_magnitude = config.gamma * self.mass * other.mass / distance ** 2
+        force_magnitude = config.GAMMA * self.mass * other.mass / distance ** 2
         return np.array([
             force_magnitude * np.cos(direction),
             force_magnitude * np.sin(direction)
@@ -99,7 +99,7 @@ class CelestialBody:
         self.position += self.velocity * delta_time
 
     def update_trail(self, delta_time: float):
-        self.time_since_last_trail_update += delta_time / config.time_acceleration
+        self.time_since_last_trail_update += delta_time / config.TIME_ACCELERATION
         if self.time_since_last_trail_update >= self.trail_update_interval:
             self.positions.append(self.position.copy())
             self.time_since_last_trail_update = 0
@@ -143,7 +143,7 @@ class Simulation:
     def initialize_simulation(self) -> None:
         scale = config.AU / 10
         self.width, self.height = config.SIMULATION_WIDTH, config.SIMULATION_HEIGHT
-        self.real_width, self.real_height = self.width / config.zoom * scale, self.height / config.zoom * scale
+        self.real_width, self.real_height = self.width / config.ZOOM * scale, self.height / config.ZOOM * scale
 
         self.screen = pygame.display.set_mode((self.width, self.height), pygame.HWSURFACE)
         pygame.display.set_caption("Planets Simulation")
@@ -176,7 +176,7 @@ class Simulation:
 
     def update_trail(self, delta_time: float) -> None:
         for celestial_body in self.celestial_bodies:
-            celestial_body.time_since_last_trail_update += delta_time / config.time_acceleration
+            celestial_body.time_since_last_trail_update += delta_time / config.TIME_ACCELERATION
             if celestial_body.time_since_last_trail_update >= celestial_body.trail_update_interval:
                 celestial_body.positions.append(celestial_body.position.copy())
                 celestial_body.time_since_last_trail_update = 0
@@ -214,12 +214,12 @@ class Renderer:
 
     def draw_debug_info(self):
         if config.DEBUG_MODE:
-            real_time = self.simulation.elapsed_time / config.time_acceleration
+            real_time = self.simulation.elapsed_time / config.TIME_ACCELERATION
             debug_info = [
                 f"--DEBUG MODE ON--",
-                f"Time Acceleration: {config.time_acceleration}",
+                f"Time Acceleration: {config.TIME_ACCELERATION}",
                 f"Sun Stationary: {config.IS_SUN_STATIONARY}",
-                f"Zoom: {config.zoom}",
+                f"Zoom: {config.ZOOM}",
                 f"Number of Celestial Bodies: {len(self.simulation.celestial_bodies)}",
                 f"CPU Usage: {psutil.cpu_percent()}%",
                 f"Memory Usage: {psutil.virtual_memory().percent}%",
