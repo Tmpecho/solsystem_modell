@@ -27,7 +27,7 @@ def main() -> None:
     while running:
         running = handle_events()
 
-        delta_time = (clock.tick(240) / 1000.0) * config.time_acceleration
+        delta_time = (clock.tick(240) / 1000.0) * config.TIME_ACCELERATION
         simulation.elapsed_time += delta_time
 
         render.draw_all()

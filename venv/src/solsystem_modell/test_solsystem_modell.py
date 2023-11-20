@@ -14,7 +14,7 @@ class TestCelestialBody(unittest.TestCase):
                                           sm.CelestialBodyData(0, 0, 0, 0, 0, 0))
 
     def test_calculate_force(self):
-        expected_force = config.gamma * self.earth.mass * self.sun.mass / self.earth.calculate_distance(self.sun) ** 2
+        expected_force = config.GAMMA * self.earth.mass * self.sun.mass / self.earth.calculate_distance(self.sun) ** 2
         calculated_force = np.linalg.norm(self.earth.calculate_force(self.sun))
         self.assertAlmostEqual(calculated_force, expected_force, places=5)
 

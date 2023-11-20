@@ -17,8 +17,8 @@ WHITE: tuple = (255, 255, 255)
 BLACK: tuple = (0, 0, 0)
 
 # Settings
-DEBUG_MODE: bool = True
+DEBUG_MODE: bool = False
 IS_SUN_STATIONARY: bool = True
-ZOOM: float = 15
+ZOOM: float = 20
 TIME_ACCELERATION: int = 1000000
 TO_SCALE: bool = False
