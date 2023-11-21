@@ -40,10 +40,7 @@ def collect_data(simulations, sun_position) -> tuple:
     return None, None, None
 
 
-def main() -> None:
-    pygame.init()
-
-    simulations, renderers = initialize_simulations()
+def run_simulation(simulations, renderers):
     clock = pygame.time.Clock()
     sun_position = simulations[0].get_planet_position("Sun")
     time_data, distance_data1, distance_data2 = [], [], []
@@ -53,7 +50,8 @@ def main() -> None:
 
         update_simulations(simulations, delta_time)
 
-        renderers[0].draw_all()
+        if config.SHOW_GRAPHICAL_VIEW:
+            renderers[0].draw_all()
 
         elapsed_time, distance1, distance2 = collect_data(simulations, sun_position)
 
@@ -62,7 +60,18 @@ def main() -> None:
             distance_data1.append(distance1)
             distance_data2.append(distance2)
 
+    return time_data, distance_data1, distance_data2
+
+
+def main() -> None:
+    pygame.init()
+
+    simulations, renderers = initialize_simulations()
+
+    time_data, distance_data1, distance_data2 = run_simulation(simulations, renderers)
+
     plot_data(time_data, distance_data1, distance_data2, ['Uranus with Neptune', 'Uranus without Neptune'])
+
     pygame.quit()
 
 

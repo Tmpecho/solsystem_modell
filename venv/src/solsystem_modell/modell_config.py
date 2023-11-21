@@ -23,5 +23,6 @@ BLACK: tuple[int, int, int] = (0, 0, 0)
 DEBUG_MODE: bool = False
 IS_SUN_STATIONARY: bool = True
 ZOOM: float = 1.5  # set to 1.5 to see all planets, 20 for inner planets
-TIME_ACCELERATION: int = 8000000  # default = 1000000
+TIME_ACCELERATION: int = 10000000000  # default = 1000000
 TO_SCALE: bool = False
+SHOW_GRAPHICAL_VIEW: bool = False  # Setting to True makes the program run mcuh slower and will be affected by lag
