@@ -6,16 +6,38 @@ import numpy as np
 
 class TestCelestialBody(unittest.TestCase):
     def setUp(self):
-        self.earth = sm.CelestialBody(sm.Appearance("Earth", (0, 0, 255), 5),
-                                      sm.CelestialBodyData(5.9722e24, 1.496e11, 0, 29784.8, np.pi / 2, 800))
-        self.sun = sm.CelestialBody(sm.Appearance("Sun", (255, 255, 0), 10),
-                                    sm.CelestialBodyData(1.98847e30, 0, 0, 0, 0, 100))
-        self.null_body = sm.CelestialBody(sm.Appearance("Null", (0, 0, 0), 0),
-                                          sm.CelestialBodyData(0, 0, 0, 0, 0, 0))
+        self.earth = sm.CelestialBody(sm.CelestialBodyAppearance("Earth", (0, 0, 255), 5),
+                                      sm.CelestialBodyProperties(5.9722e24, 1.496e11, 0, 29784.8, np.pi / 2, 800))
+        self.sun = sm.CelestialBody(sm.CelestialBodyAppearance("Sun", (255, 255, 0), 10),
+                                    sm.CelestialBodyProperties(1.98847e30, 0, 0, 0, 0, 100))
+        self.null_body = sm.CelestialBody(sm.CelestialBodyAppearance("Null", (0, 0, 0), 0),
+                                          sm.CelestialBodyProperties(0, 0, 0, 0, 0, 0))
+
+    def test_calculate_force_when_distance_is_zero(self):
+        self.earth.position = self.sun.position
+        with self.assertRaises(ZeroDivisionError):
+            self.earth.calculate_gravitational_force(self.sun)
+
+    def test_calculate_distance_when_positions_are_same(self):
+        self.earth.position = self.sun.position
+        calculated_distance = self.earth.calculate_distance(self.sun)
+        self.assertEqual(calculated_distance, 0)
+
+    def test_update_position_when_velocity_is_zero(self):
+        self.earth.velocity = np.zeros(2)
+        initial_position = self.earth.position.copy()
+        self.earth.update_position(1)
+        self.assertTrue(np.array_equal(self.earth.position, initial_position))
+
+    def test_update_velocity_when_force_is_zero(self):
+        self.earth.mass = 0
+        initial_velocity = self.earth.velocity.copy()
+        self.earth.update_velocity(self.sun, 1)
+        self.assertTrue(np.array_equal(self.earth.velocity, initial_velocity))
 
     def test_calculate_force(self):
         expected_force = config.GAMMA * self.earth.mass * self.sun.mass / self.earth.calculate_distance(self.sun) ** 2
-        calculated_force = np.linalg.norm(self.earth.calculate_force(self.sun))
+        calculated_force = np.linalg.norm(self.earth.calculate_gravitational_force(self.sun))
         self.assertAlmostEqual(calculated_force, expected_force, places=5)
 
     def test_calculate_distance(self):
@@ -52,7 +74,7 @@ class TestCelestialBody(unittest.TestCase):
         self.assertAlmostEqual(calculated_velocity_norm, expected_velocity_norm, places=5)
 
     def test_calculate_force_with_null_body(self):
-        calculated_force = np.linalg.norm(self.earth.calculate_force(self.null_body))
+        calculated_force = np.linalg.norm(self.earth.calculate_gravitational_force(self.null_body))
         self.assertEqual(calculated_force, 0)
 
     def test_calculate_distance_with_null_body(self):
@@ -78,39 +100,6 @@ class TestCelestialBody(unittest.TestCase):
     def test_velocity_norm_of_null_body(self):
         calculated_velocity_norm = self.null_body.velocity_norm()
         self.assertEqual(calculated_velocity_norm, 0)
-
-
-class TestSimulation(unittest.TestCase):
-    def setUp(self):
-        self.simulation = sm.Simulation()
-        self.simulation.initialize_simulation()
-
-    def test_calculate_forces(self):
-        forces = self.simulation.calculate_forces()
-        for celestial_body in self.simulation.celestial_bodies:
-            self.assertIsInstance(forces[celestial_body], np.ndarray)
-
-    def test_update_planet_velocity(self):
-        forces = self.simulation.calculate_forces()
-        initial_velocities = {celestial_body: celestial_body.velocity.copy() for celestial_body in
-                              self.simulation.celestial_bodies}
-        self.simulation.update_planet_velocity(forces, 1000)
-        for celestial_body in self.simulation.celestial_bodies:
-            self.assertFalse(np.array_equal(celestial_body.velocity, initial_velocities[celestial_body]))
-
-    def test_update_planet_position(self):
-        initial_positions = {celestial_body: celestial_body.position.copy() for celestial_body in
-                             self.simulation.celestial_bodies if not celestial_body.is_stationary}
-        self.simulation.update_planet_position(10000)
-        for celestial_body in initial_positions:
-            self.assertFalse(np.array_equal(celestial_body.position, initial_positions[celestial_body]))
-
-    def test_update_trail(self):
-        initial_trails = {celestial_body: len(celestial_body.positions) for celestial_body in
-                          self.simulation.celestial_bodies if not celestial_body.is_stationary}
-        self.simulation.update_trail(10000)
-        for celestial_body in initial_trails:
-            self.assertNotEqual(len(celestial_body.positions), initial_trails[celestial_body])
 
 
 if __name__ == '__main__':

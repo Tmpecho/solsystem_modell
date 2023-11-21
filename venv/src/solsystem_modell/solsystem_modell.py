@@ -11,7 +11,7 @@ import modell_config as config
 
 
 @dataclass
-class Appearance:
+class CelestialBodyAppearance:
     """A class representing the appearance of a celestial body"""
     name: str
     color: tuple[int, int, int]
@@ -19,7 +19,7 @@ class Appearance:
 
 
 @dataclass
-class CelestialBodyData:
+class CelestialBodyProperties:
     """A class representing the data of a celestial body"""
     mass: float
     x_pos: float
@@ -32,15 +32,19 @@ class CelestialBodyData:
 # TODO: Make appearance.size relative to the size of the screen and the size of the planet
 class CelestialBody:
     """A class representing a celestial body"""
-    def __init__(self, appearance: 'Appearance', celestial_body_data: 'CelestialBodyData') -> None:
+
+    def __init__(self, appearance: 'CelestialBodyAppearance', celestial_body_data: 'CelestialBodyProperties') -> None:
         self.name = appearance.name
         self.color = appearance.color
+
+        self.mass = celestial_body_data.mass
         if config.TO_SCALE:
             self.size = appearance.radius / config.AU * config.ZOOM * config.SCALE_FACTOR
         else:
-            self.size = config.DEFAULT_OBJECT_SIZE * np.log(
-                appearance.radius) / config.SIZE_SCALING_FACTOR * config.ZOOM
-        self.mass = celestial_body_data.mass
+            if self.mass > 0:
+                self.size = config.DEFAULT_OBJECT_SIZE * np.log(self.mass) / config.SIZE_SCALING_FACTOR * config.ZOOM
+            else:
+                self.size = 0
         self.position = np.array([celestial_body_data.x_pos, celestial_body_data.y_pos], dtype=np.float64)
         self.velocity = np.array([celestial_body_data.velocity * np.cos(celestial_body_data.direction),
                                   celestial_body_data.velocity * np.sin(celestial_body_data.direction)],
@@ -53,17 +57,17 @@ class CelestialBody:
         self.trail_update_interval = config.TRAIL_UPDATE_INTERVAL
         self.positions = deque(maxlen=10000)
 
-    def calculate_force(self, other: 'CelestialBody') -> np.ndarray:
-        return Calculator.calculate_force(self, other)
+    def calculate_gravitational_force(self, other: 'CelestialBody') -> np.ndarray:
+        return CelestialBodyCalculator.calculate_gravitational_force(self, other)
 
     def calculate_distance(self, other: 'CelestialBody') -> float:
-        return Calculator.calculate_distance(self, other)
+        return CelestialBodyCalculator.calculate_distance(self, other)
 
     def calculate_direction(self, other: 'CelestialBody') -> float:
-        return Calculator.calculate_direction(self, other)
+        return CelestialBodyCalculator.calculate_direction(self, other)
 
     def calculate_vector(self, other: 'CelestialBody') -> np.ndarray:
-        return Calculator.calculate_vector(self, other)
+        return CelestialBodyCalculator.calculate_vector(self, other)
 
     def update_position(self, delta_time: float = None):
         if not self.is_stationary:
@@ -73,7 +77,7 @@ class CelestialBody:
 
     def update_velocity(self, other: Optional['CelestialBody'], delta_time: float):
         if other is not None and self.mass != 0:
-            force = self.calculate_force(other)
+            force = self.calculate_gravitational_force(other)
             acceleration = force / self.mass
             self.velocity += acceleration * delta_time
 
@@ -130,7 +134,7 @@ class Simulation:
         pygame.display.set_caption("Planets Simulation")
 
         sun_x, sun_y = self.real_width / 2, self.real_height / 2
-        self.celestial_bodies = create_planets(sun_x, sun_y, file_name)
+        self.celestial_bodies = create_celestial_bodies(sun_x, sun_y, file_name)
 
         pygame.font.init()
         # noinspection PyTypeChecker
@@ -141,7 +145,7 @@ class Simulation:
         n = len(self.celestial_bodies)
         for i in range(n):
             for j in range(i + 1, n):
-                force = self.celestial_bodies[i].calculate_force(self.celestial_bodies[j])
+                force = self.celestial_bodies[i].calculate_gravitational_force(self.celestial_bodies[j])
                 forces[self.celestial_bodies[i]] += force
                 forces[self.celestial_bodies[j]] -= force
         return forces
@@ -289,7 +293,7 @@ class Renderer:
             pygame.draw.lines(self.simulation.screen, config.WHITE, False, points_list, 1)
 
 
-class Calculator:
+class CelestialBodyCalculator:
     @staticmethod
     def calculate_vector(body1: 'CelestialBody', body2: 'CelestialBody') -> np.ndarray:
         """Calculate the vector from body1 to body2"""
@@ -298,27 +302,28 @@ class Calculator:
     @staticmethod
     def calculate_direction(body1: 'CelestialBody', body2: 'CelestialBody') -> float:
         """Calculate the direction from body1 to body2"""
-        vector = Calculator.calculate_vector(body1, body2)
+        vector = CelestialBodyCalculator.calculate_vector(body1, body2)
         return np.arctan2(vector[1], vector[0])
 
     @staticmethod
     def calculate_distance(body1: 'CelestialBody', body2: 'CelestialBody') -> float:
         """Calculate the distance between body1 and body2"""
-        vector = Calculator.calculate_vector(body1, body2)
+        vector = CelestialBodyCalculator.calculate_vector(body1, body2)
         return np.linalg.norm(vector)
 
     @staticmethod
-    def calculate_force(body1: 'CelestialBody', body2: 'CelestialBody') -> np.ndarray:
+    def calculate_gravitational_force(body1: 'CelestialBody', body2: 'CelestialBody') -> np.ndarray:
         """Calculate the gravitational force between body1 and body2"""
-        vector = Calculator.calculate_vector(body1, body2)
-        distance = Calculator.calculate_distance(body1, body2)
-        force_magnitude = config.GAMMA * body1.mass * body2.mass / distance ** 2
-        force_direction = vector / distance
+        distance_vector = CelestialBodyCalculator.calculate_vector(body1, body2)
+        force_distance = CelestialBodyCalculator.calculate_distance(body1, body2)
+        if force_distance == 0:
+            raise ZeroDivisionError("Distance between celestial bodies cannot be zero.")
+        force_magnitude = config.GAMMA * body1.mass * body2.mass / force_distance ** 2
+        force_direction = distance_vector / force_distance
         return force_magnitude * force_direction
 
 
-# TODO: Make data into a file
-def create_planets(sun_x: float, sun_y: float, file_name) -> list[CelestialBody]:
+def create_celestial_bodies(sun_x: float, sun_y: float, file_name) -> list[CelestialBody]:
     planets = []
     with open(file_name, 'r') as file:
         reader = csv.reader(file)
@@ -335,7 +340,9 @@ def create_planets(sun_x: float, sun_y: float, file_name) -> list[CelestialBody]
             max_trail_length = int(max_trail_length)
 
             # noinspection PyTypeChecker
-            celestial_body = CelestialBody(Appearance(name, color, radius),
-                                           CelestialBodyData(mass, x_pos, y_pos, velocity, direction, max_trail_length))
+            celestial_body_appearance = CelestialBodyAppearance(name, color, radius)
+            celestial_body_properties = CelestialBodyProperties(mass, x_pos, y_pos,
+                                                                velocity, direction, max_trail_length)
+            celestial_body = CelestialBody(celestial_body_appearance, celestial_body_properties)
             planets.append(celestial_body)
     return planets

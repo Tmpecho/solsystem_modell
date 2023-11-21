@@ -44,9 +44,11 @@ def run_simulation(simulations, renderers):
     clock = pygame.time.Clock()
     sun_position = simulations[0].get_planet_position("Sun")
     time_data, distance_data1, distance_data2 = [], [], []
+    total_elapsed_time = 0
 
-    while handle_events():
+    while handle_events() and total_elapsed_time < config.SIMULATION_YEARS * 60 * 60 * 24 * 365.25:
         delta_time = (clock.tick(240) / 1000.0) * config.TIME_ACCELERATION
+        total_elapsed_time += delta_time
 
         update_simulations(simulations, delta_time)
 
