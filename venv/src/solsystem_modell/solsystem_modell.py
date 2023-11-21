@@ -38,7 +38,7 @@ class CelestialBody:
     :param celestial_body_data: The data of the celestial body
     """
 
-    def __init__(self, appearance, celestial_body_data) -> None:
+    def __init__(self, appearance: 'Appearance', celestial_body_data: 'CelestialBodyData') -> None:
         self.name = appearance.name
         self.color = appearance.color
         if config.TO_SCALE:
@@ -192,7 +192,6 @@ class Renderer:
 
     :param simulation: The simulation to render
     """
-
     def __init__(self, simulation: 'Simulation') -> None:
         self.simulation = simulation
 
