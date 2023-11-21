@@ -30,14 +30,6 @@ class CelestialBodyData:
 
 # TODO: Make appearance.size relative to the size of the screen and the size of the planet
 class CelestialBody:
-    """The CelestialBody class in a space simulation represents a celestial body, encapsulating its appearance and
-    physical properties. It uses instances of the Appearance and CelestialBodyData classes for defining these
-    properties. It also provides methods for force calculation, position and velocity updates, and name rendering.
-
-    :param appearance: The appearance of the celestial body
-    :param celestial_body_data: The data of the celestial body
-    """
-
     def __init__(self, appearance: 'Appearance', celestial_body_data: 'CelestialBodyData') -> None:
         self.name = appearance.name
         self.color = appearance.color
@@ -60,28 +52,16 @@ class CelestialBody:
         self.positions = deque(maxlen=10000)
 
     def calculate_force(self, other: 'CelestialBody') -> np.ndarray:
-        distance = self.calculate_distance(other)
-        direction = self.calculate_direction(other)
-
-        if distance == 0:
-            return np.zeros(2, dtype=np.float64)
-
-        force_magnitude = config.GAMMA * self.mass * other.mass / distance ** 2
-        return np.array([
-            force_magnitude * np.cos(direction),
-            force_magnitude * np.sin(direction)
-        ])
+        return calculate_force(self, other)
 
     def calculate_distance(self, other: 'CelestialBody') -> float:
-        vec = self.calculate_vector(other)
-        return np.linalg.norm(vec)
+        return calculate_distance(self, other)
 
     def calculate_direction(self, other: 'CelestialBody') -> float:
-        vec = self.calculate_vector(other)
-        return np.arctan2(vec[1], vec[0])
+        return calculate_direction(self, other)
 
     def calculate_vector(self, other: 'CelestialBody') -> np.ndarray:
-        return other.position - self.position
+        return calculate_vector(self, other)
 
     def update_position(self, delta_time: float = None):
         if not self.is_stationary:
@@ -300,6 +280,33 @@ class Renderer:
             pygame.draw.lines(self.simulation.screen, config.WHITE, False, points_list, 1)
 
 
+def calculate_vector(body1: 'CelestialBody', body2: 'CelestialBody') -> np.ndarray:
+    """Calculate the vector from body1 to body2"""
+    return body2.position - body1.position
+
+
+def calculate_direction(body1: 'CelestialBody', body2: 'CelestialBody') -> float:
+    """Calculate the direction from body1 to body2"""
+    vector = calculate_vector(body1, body2)
+    return np.arctan2(vector[1], vector[0])
+
+
+def calculate_distance(body1: 'CelestialBody', body2: 'CelestialBody') -> float:
+    """Calculate the distance between body1 and body2"""
+    vector = calculate_vector(body1, body2)
+    return np.linalg.norm(vector)
+
+
+def calculate_force(body1: 'CelestialBody', body2: 'CelestialBody') -> np.ndarray:
+    """Calculate the gravitational force between body1 and body2"""
+    vector = calculate_vector(body1, body2)
+    distance = calculate_distance(body1, body2)
+    force_magnitude = config.GAMMA * body1.mass * body2.mass / distance ** 2
+    force_direction = vector / distance
+    return force_magnitude * force_direction
+
+
+# TODO: Make data into a file
 def create_planets(real_height: float, real_width) -> list[CelestialBody]:
     sun_x, sun_y = real_width / 2, real_height / 2
     planets = [
