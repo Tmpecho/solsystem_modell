@@ -1,17 +1,19 @@
 import unittest
-from src.solsystem_modell import solsystem_modell as sm
-import modell_config as config
+
 import numpy as np
+
+import src.config as config
+import src.solsystem_modell.celestial_body as cb
 
 
 class TestCelestialBody(unittest.TestCase):
     def setUp(self):
-        self.earth = sm.CelestialBody(sm.CelestialBodyAppearance("Earth", (0, 0, 255), 5),
-                                      sm.CelestialBodyProperties(5.9722e24, 1.496e11, 0, 29784.8, np.pi / 2, 800))
-        self.sun = sm.CelestialBody(sm.CelestialBodyAppearance("Sun", (255, 255, 0), 10),
-                                    sm.CelestialBodyProperties(1.98847e30, 0, 0, 0, 0, 100))
-        self.null_body = sm.CelestialBody(sm.CelestialBodyAppearance("Null", (0, 0, 0), 0),
-                                          sm.CelestialBodyProperties(0, 0, 0, 0, 0, 0))
+        self.earth = cb.CelestialBody(cb.CelestialBodyAppearance("Earth", (0, 0, 255), 5),
+                                      cb.CelestialBodyProperties(5.9722e24, 1.496e11, 0, 29784.8, np.pi / 2, 800))
+        self.sun = cb.CelestialBody(cb.CelestialBodyAppearance("Sun", (255, 255, 0), 10),
+                                    cb.CelestialBodyProperties(1.98847e30, 0, 0, 0, 0, 100))
+        self.null_body = cb.CelestialBody(cb.CelestialBodyAppearance("Null", (0, 0, 0), 0),
+                                          cb.CelestialBodyProperties(0, 0, 0, 0, 0, 0))
 
     def test_calculate_force_when_distance_is_zero(self):
         self.earth.position = self.sun.position
