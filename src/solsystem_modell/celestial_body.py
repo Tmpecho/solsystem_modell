@@ -2,9 +2,9 @@ from collections import deque
 from dataclasses import dataclass
 from typing import Optional
 
-from src import config
-
 import numpy as np
+
+from src import config
 
 
 @dataclass
@@ -28,7 +28,11 @@ class CelestialBodyProperties:
 
 # TODO: Make appearance.size relative to the size of the screen and the size of the planet
 class CelestialBody:
-    """A class representing a celestial body"""
+    """A class representing a celestial body
+
+    :param appearance: The appearance of the celestial body
+    :param celestial_body_data: The data of the celestial body
+    """
 
     def __init__(self, appearance: 'CelestialBodyAppearance', celestial_body_data: 'CelestialBodyProperties') -> None:
         self.name = appearance.name

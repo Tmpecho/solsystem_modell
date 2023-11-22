@@ -22,7 +22,7 @@ BLACK: tuple[int, int, int] = (0, 0, 0)
 # Settings
 MAX_SIMULATION_YEARS: int = 200
 DEBUG_MODE: bool = False
-IS_SUN_STATIONARY: bool = False
+IS_SUN_STATIONARY: bool = Falsex
 ZOOM: float = 15  # set to 1.5 to see all planets, 20 for inner planets
 TIME_ACCELERATION: int = int(1e6)  # default = 1e6
 TO_SCALE: bool = True

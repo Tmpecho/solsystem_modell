@@ -9,6 +9,7 @@ class Renderer:
 
     :param simulation: The simulation to render
     """
+
     def __init__(self, simulation: 'Simulation') -> None:
         self.simulation = simulation
 

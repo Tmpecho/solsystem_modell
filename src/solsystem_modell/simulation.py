@@ -7,6 +7,7 @@ from src.solsystem_modell.utils import create_celestial_bodies
 
 class Simulation:
     """A class representing the simulation"""
+
     def __init__(self) -> None:
         self.celestial_bodies = []
         self.screen = None

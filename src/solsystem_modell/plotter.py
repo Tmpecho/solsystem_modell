@@ -1,6 +1,6 @@
-import seaborn as sns
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
 
 
 def plot_data(time_data, distance_data1, distance_data2, labels):

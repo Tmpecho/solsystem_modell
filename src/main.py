@@ -1,9 +1,9 @@
-import config as config
-
-import pygame
-import numpy as np
 import cProfile
 
+import numpy as np
+import pygame
+
+import config as config
 from src.solsystem_modell.plotter import plot_data
 from src.solsystem_modell.renderer import Renderer
 from src.solsystem_modell.simulation import Simulation

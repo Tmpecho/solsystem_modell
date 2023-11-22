@@ -1,7 +1,6 @@
 from src.solsystem_modell.celestial_body import CelestialBody, CelestialBodyAppearance, CelestialBodyProperties
 from src import config
 import numpy as np
-
 import csv
 
 
