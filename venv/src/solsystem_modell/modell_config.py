@@ -21,7 +21,6 @@ BLACK: tuple[int, int, int] = (0, 0, 0)
 
 # Settings
 SIMULATION_YEARS: int = 100
-
 DEBUG_MODE: bool = True
 IS_SUN_STATIONARY: bool = True
 ZOOM: float = 1.5  # set to 1.5 to see all planets, 20 for inner planets
