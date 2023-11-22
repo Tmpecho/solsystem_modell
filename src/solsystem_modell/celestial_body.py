@@ -9,7 +9,13 @@ from src import config
 
 @dataclass
 class CelestialBodyAppearance:
-    """A class representing the appearance of a celestial body"""
+    """
+    A class representing the appearance of a celestial body.
+
+    :ivar name: The name of the celestial body.
+    :ivar color: The color of the celestial body in RGB format.
+    :ivar radius: The radius of the celestial body.
+    """
     name: str
     color: tuple[int, int, int]
     radius: int
@@ -17,7 +23,16 @@ class CelestialBodyAppearance:
 
 @dataclass
 class CelestialBodyProperties:
-    """A class representing the data of a celestial body"""
+    """
+    A class representing the appearance of a celestial body.
+
+    :ivar mass: The mass of the celestial body.
+    :ivar x_pos: The x-position of the celestial body.
+    :ivar y_pos: The y-position of the celestial body.
+    :ivar velocity: The velocity of the celestial body.
+    :ivar direction: The direction of the celestial body.
+    :ivar max_trail_length: The maximum length of the trail of the celestial body.
+    """
     mass: float
     x_pos: float
     y_pos: float
@@ -28,13 +43,32 @@ class CelestialBodyProperties:
 
 # TODO: Make appearance.size relative to the size of the screen and the size of the planet
 class CelestialBody:
-    """A class representing a celestial body
+    """
+    A class representing a celestial body.
 
-    :param appearance: The appearance of the celestial body
-    :param celestial_body_data: The data of the celestial body
+    :param appearance: The appearance of the celestial body.
+    :param celestial_body_data: The data of the celestial body.
+
+    :ivar name: The name of the celestial body.
+    :ivar color: The color of the celestial body in RGB format.
+    :ivar mass: The mass of the celestial body.
+    :ivar size: The size of the celestial body.
+    :ivar position: The position of the celestial body.
+    :ivar velocity: The velocity of the celestial body.
+    :ivar max_trail_length: The maximum length of the trail of the celestial body.
+    :ivar is_stationary: Whether the celestial body is stationary or not.
+    :ivar label_surfaces: The surfaces of the labels of the celestial body.
+    :ivar time_since_last_trail_update: The time since the last trail update.
+    :ivar trail_update_interval: The interval between trail updates.
+    :ivar positions: The positions of the celestial body.
     """
 
     def __init__(self, appearance: 'CelestialBodyAppearance', celestial_body_data: 'CelestialBodyProperties') -> None:
+        """
+
+        :param appearance:
+        :param celestial_body_data:
+        """
         self.name = appearance.name
         self.color = appearance.color
 
@@ -59,47 +93,103 @@ class CelestialBody:
         self.positions = deque(maxlen=10000)
 
     def calculate_gravitational_force(self, other: 'CelestialBody') -> np.ndarray:
+        """
+
+        :param other:
+        :return:
+        """
         return CelestialBodyCalculator.calculate_gravitational_force(self, other)
 
     def calculate_distance(self, other: 'CelestialBody') -> float:
+        """
+
+        :param other:
+        :return:
+        """
         return CelestialBodyCalculator.calculate_distance(self, other)
 
     def calculate_direction(self, other: 'CelestialBody') -> float:
+        """
+
+        :param other:
+        :return:
+        """
         return CelestialBodyCalculator.calculate_direction(self, other)
 
     def calculate_vector(self, other: 'CelestialBody') -> np.ndarray:
+        """
+
+        :param other:
+        :return:
+        """
         return CelestialBodyCalculator.calculate_vector(self, other)
 
     def update_position(self, delta_time: float = None):
+        """
+
+        :param delta_time:
+        :return:
+        """
         if not self.is_stationary:
             self.update_velocity(None, delta_time)
             self.update_position_based_on_velocity(delta_time)
             self.update_trail(delta_time)
 
     def update_velocity(self, other: Optional['CelestialBody'], delta_time: float):
+        """
+
+        :param other:
+        :param delta_time:
+        :return:
+        """
         if other is not None and self.mass != 0:
             force = self.calculate_gravitational_force(other)
             acceleration = force / self.mass
             self.velocity += acceleration * delta_time
 
     def update_position_based_on_velocity(self, delta_time: float):
+        """
+
+        :param delta_time:
+        :return:
+        """
         self.position += self.velocity * delta_time
 
     def update_trail(self, delta_time: float):
+        """
+
+        :param delta_time:
+        :return:
+        """
         self.time_since_last_trail_update += delta_time / config.TIME_ACCELERATION
         if self.time_since_last_trail_update >= self.trail_update_interval:
             self.positions.append(self.position.copy())
             self.time_since_last_trail_update = 0
 
     def distance_to_sun(self, sun: 'CelestialBody') -> float:
+        """
+
+        :param sun:
+        :return:
+        """
         if self.name == "Sun":
             return 0
         return np.linalg.norm(self.position - sun.position)
 
     def velocity_norm(self) -> float:
+        """
+
+        :return:
+        """
         return np.linalg.norm(self.velocity)
 
     def render_name(self, font, sun: 'CelestialBody') -> None:
+        """
+
+        :param font:
+        :param sun:
+        :return:
+        """
         distance = self.distance_to_sun(sun) / config.AU
         velocity_norm = self.velocity_norm()
 
@@ -113,26 +203,54 @@ class CelestialBody:
 
 
 class CelestialBodyCalculator:
+    """
+    A class containing static methods for calculating properties of celestial bodies.
+    """
+
     @staticmethod
     def calculate_vector(body1: 'CelestialBody', body2: 'CelestialBody') -> np.ndarray:
-        """Calculate the vector from body1 to body2"""
+        """
+        Calculate the vector from body1 to body2
+
+        :param body1:
+        :param body2:
+        :return:
+        """
         return body2.position - body1.position
 
     @staticmethod
     def calculate_direction(body1: 'CelestialBody', body2: 'CelestialBody') -> float:
-        """Calculate the direction from body1 to body2"""
+        """
+        Calculate the direction from body1 to body2
+
+        :param body1:
+        :param body2:
+        :return:
+        """
         vector = CelestialBodyCalculator.calculate_vector(body1, body2)
         return np.arctan2(vector[1], vector[0])
 
     @staticmethod
     def calculate_distance(body1: 'CelestialBody', body2: 'CelestialBody') -> float:
-        """Calculate the distance between body1 and body2"""
+        """
+        Calculate the distance between body1 and body2
+
+        :param body1:
+        :param body2:
+        :return:
+        """
         vector = CelestialBodyCalculator.calculate_vector(body1, body2)
         return np.linalg.norm(vector)
 
     @staticmethod
     def calculate_gravitational_force(body1: 'CelestialBody', body2: 'CelestialBody') -> np.ndarray:
-        """Calculate the gravitational force between body1 and body2"""
+        """
+        Calculate the gravitational force between body1 and body2
+
+        :param body1:
+        :param body2:
+        :return:
+        """
         distance_vector = CelestialBodyCalculator.calculate_vector(body1, body2)
         force_distance = CelestialBodyCalculator.calculate_distance(body1, body2)
         if force_distance == 0:
