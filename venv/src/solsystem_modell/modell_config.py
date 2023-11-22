@@ -13,7 +13,7 @@ DEFAULT_OBJECT_SIZE: int = 5
 SIZE_SCALING_FACTOR = 100
 
 # File Paths
-DATA_FILE_PATH_ROOT: str = "venv/src/solsystem_modell/"
+DATA_FILE_PATH_ROOT: str = "venv/src/solsystem_modell/data/"
 
 # Colors
 WHITE: tuple[int, int, int] = (255, 255, 255)
