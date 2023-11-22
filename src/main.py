@@ -1,10 +1,12 @@
-from solsystem_modell import Simulation, Renderer
-from plotter import plot_data
-import modell_config as config
+import config as config
 
 import pygame
 import numpy as np
 import cProfile
+
+from src.solsystem_modell.plotter import plot_data
+from src.solsystem_modell.renderer import Renderer
+from src.solsystem_modell.simulation import Simulation
 
 
 def handle_events() -> bool:
@@ -46,7 +48,7 @@ def run_simulation(simulations, renderers):
     time_data, distance_data1, distance_data2 = [], [], []
     total_elapsed_time = 0
 
-    while handle_events() and total_elapsed_time < config.SIMULATION_YEARS * 60 * 60 * 24 * 365.25:
+    while handle_events() and total_elapsed_time < config.MAX_SIMULATION_YEARS * 60 * 60 * 24 * 365.25:
         delta_time = (clock.tick(240) / 1000.0) * config.TIME_ACCELERATION
         total_elapsed_time += delta_time
 

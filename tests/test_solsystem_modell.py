@@ -1,5 +1,5 @@
 import unittest
-import solsystem_modell as sm
+from src.solsystem_modell import solsystem_modell as sm
 import modell_config as config
 import numpy as np
 
