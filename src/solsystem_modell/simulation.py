@@ -6,7 +6,18 @@ from src.solsystem_modell.utils import create_celestial_bodies
 
 
 class Simulation:
-    """A class representing the simulation"""
+    """
+    A class representing the simulation
+
+    :ivar celestial_bodies: The celestial bodies in the simulation.
+    :ivar screen: The screen of the simulation.
+    :ivar width: The width of the simulation.
+    :ivar height: The height of the simulation.
+    :ivar real_width: The real width of the simulation.
+    :ivar real_height: The real height of the simulation.
+    :ivar font: The font of the simulation.
+    :ivar elapsed_time: The elapsed time of the simulation.
+    """
 
     def __init__(self) -> None:
         self.celestial_bodies = []
