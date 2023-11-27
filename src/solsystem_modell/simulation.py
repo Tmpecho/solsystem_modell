@@ -46,12 +46,11 @@ class Simulation:
 
     def calculate_forces(self) -> dict:
         forces = {celestial_body: np.zeros(2, dtype=np.float64) for celestial_body in self.celestial_bodies}
-        n = len(self.celestial_bodies)
-        for i in range(n):
-            for j in range(i + 1, n):
-                force = self.celestial_bodies[i].calculate_gravitational_force(self.celestial_bodies[j])
-                forces[self.celestial_bodies[i]] += force
-                forces[self.celestial_bodies[j]] -= force
+        for i, celestial_body_i in enumerate(self.celestial_bodies):
+            for celestial_body_j in self.celestial_bodies[i + 1:]:
+                force = celestial_body_i.calculate_gravitational_force(celestial_body_j)
+                forces[celestial_body_i] += force
+                forces[celestial_body_j] -= force
         return forces
 
     def update_planet_velocity(self, forces: dict, delta_time: float) -> None:

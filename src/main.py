@@ -32,6 +32,7 @@ def update_simulations(simulations, delta_time) -> None:
         sim.update_planet_positions(delta_time)
 
 
+# TODO: Add the ability to save data to a file
 def collect_data(simulations, sun_position) -> tuple:
     uranus_positions = [sim.get_planet_position("Uranus") for sim in simulations]
 
