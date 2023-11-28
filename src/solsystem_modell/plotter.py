@@ -17,10 +17,17 @@ def plot_data(time_data, distance_data1, distance_data2, labels):
         'Difference (km)': difference_data
     })
 
-    # sns.lineplot(data=data, x='Time (years)', y=f'{labels[0]} (km)')
-    # sns.lineplot(data=data, x='Time (years)', y=f'{labels[1]} (km)')
+    # Plot for positions
+    plt.figure()
+    sns.lineplot(data=data, x='Time (years)', y=f'{labels[0]} (km)')
+    sns.lineplot(data=data, x='Time (years)', y=f'{labels[1]} (km)')
+    plt.legend(title='Uranus', labels=[f'{label} (km)' for label in labels])
+    plt.title('Distances of Uranus with and without Neptune over Time')
+    plt.show()
+
+    # Plot for difference
+    plt.figure()
     sns.lineplot(data=data, x='Time (years)', y='Difference (km)', linestyle='--')
     plt.legend(title='Uranus', labels=['Difference (km)'])
-    # plt.legend(title='Uranus', labels=[f'{label} (km)' for label in labels] + ['Difference (km)'])
-    plt.title('Distances of Uranus with and without Neptune over Time')
+    plt.title('Difference in Distances of Uranus with and without Neptune over Time')
     plt.show()
