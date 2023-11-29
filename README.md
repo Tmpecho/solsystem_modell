@@ -14,7 +14,7 @@ ___
 
 ## Installasjon
 
-Last ned prosjektet fra GitHub og kjør main.py i en Python IDE.
+Last ned prosjektet fra GitHub og kjør main.py i en Python IDE. Endre instillinger for blant annent zoom nivå, simulasjonsfart og debug modus i config.py.
 
 ___
 
