@@ -4,20 +4,22 @@ import numpy as np
 import csv
 
 
+# TODO: Change csv format to use distance from sun instead of x and y position
 def create_celestial_bodies(sun_x: float, sun_y: float, file_name) -> list[CelestialBody]:
     planets = []
     with open(file_name, 'r') as file:
         reader = csv.reader(file)
         next(reader)
         for row in reader:
-            name, color, radius, mass, x_pos, y_pos, velocity, direction, max_trail_length = row
+            name, color, radius, mass, distance, velocity, direction, max_trail_length = row
             color = tuple(map(int, color.strip("()").split(", ")))
-            radius = int(radius)
+            radius = int(radius) * 1000
             mass = float(mass)
-            x_pos = eval(x_pos.replace('sun_x', str(sun_x)).replace('AU', 'config.AU'))
-            y_pos = eval(y_pos.replace('sun_y', str(sun_y)))
+            distance = float(distance) * config.AU
             velocity = float(velocity)
             direction = eval(direction.replace('pi', 'np.pi'))
+            x_pos = sun_x + distance * np.sin(direction)
+            y_pos = sun_y + distance * np.cos(direction)
             max_trail_length = int(max_trail_length)
 
             # noinspection PyTypeChecker

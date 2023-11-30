@@ -22,7 +22,7 @@ WHITE: tuple[int, int, int] = (255, 255, 255)
 BLACK: tuple[int, int, int] = (0, 0, 0)
 
 # --- RUN SETTINGS ---
-DEBUG_MODE: bool = True
+DEBUG_MODE: bool = False
 IS_SUN_STATIONARY: bool = True
 TO_SCALE: bool = True
 SHOW_GRAPHICAL_VIEW: bool = True  # Setting to True makes the program run much slower and will be affected by lag
