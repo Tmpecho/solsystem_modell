@@ -4,7 +4,6 @@ import numpy as np
 import csv
 
 
-# TODO: Change csv format to use distance from sun instead of x and y position
 def create_celestial_bodies(sun_x: float, sun_y: float, file_name) -> list[CelestialBody]:
     planets = []
     with open(file_name, 'r') as file:
