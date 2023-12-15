@@ -11,10 +11,6 @@ from src import config
 class CelestialBodyAppearance:
     """
     A class representing the appearance of a celestial body.
-
-    :ivar name: The name of the celestial body.
-    :ivar color: The color of the celestial body in RGB format.
-    :ivar radius: The radius of the celestial body.
     """
     name: str
     color: tuple[int, int, int]
@@ -25,13 +21,6 @@ class CelestialBodyAppearance:
 class CelestialBodyProperties:
     """
     A class representing the appearance of a celestial body.
-
-    :ivar mass: The mass of the celestial body.
-    :ivar x_pos: The x-position of the celestial body.
-    :ivar y_pos: The y-position of the celestial body.
-    :ivar velocity: The velocity of the celestial body.
-    :ivar direction: The direction of the celestial body.
-    :ivar max_trail_length: The maximum length of the trail of the celestial body.
     """
     mass: float
     x_pos: float
@@ -48,19 +37,6 @@ class CelestialBody:
 
     :param appearance: The appearance of the celestial body.
     :param celestial_body_data: The data of the celestial body.
-
-    :ivar name: The name of the celestial body.
-    :ivar color: The color of the celestial body in RGB format.
-    :ivar mass: The mass of the celestial body.
-    :ivar size: The size of the celestial body.
-    :ivar position: The position of the celestial body.
-    :ivar velocity: The velocity of the celestial body.
-    :ivar max_trail_length: The maximum length of the trail of the celestial body.
-    :ivar is_stationary: Whether the celestial body is stationary or not.
-    :ivar label_surfaces: The surfaces of the labels of the celestial body.
-    :ivar time_since_last_trail_update: The time since the last trail update.
-    :ivar trail_update_interval: The interval between trail updates.
-    :ivar positions: The positions of the celestial body.
     """
 
     def __init__(self, appearance: 'CelestialBodyAppearance', celestial_body_data: 'CelestialBodyProperties') -> None:

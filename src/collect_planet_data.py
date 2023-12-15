@@ -1,42 +1,53 @@
-import os
-import numpy as np
 import csv
-import warnings
-from erfa import ErfaWarning
+import os
+
+import numpy as np
 from astropy import coordinates as coord
-from astropy import units
+from astropy import units as u
 from astropy.time import Time
 
-import config
+
+# FIXME: Temporary solution, but it's wrong
+def transform_data(pos, vel):
+    pos = coord.CartesianRepresentation(pos.x, pos.y, 0 * u.au)
+    vel = coord.CartesianDifferential(vel.x, vel.y, 0 * u.au / u.s)
+    vel = vel.norm().to(u.m / u.s).value
+    dist = pos.norm().to(u.AU).value
+
+    return dist, vel
 
 
-# TODO: Convert measurments to correct format
-def main():
-    coord.solar_system_ephemeris.set('jpl')
-
-    # Suppress ERFA warnings
-    with warnings.catch_warnings():
-        warnings.filterwarnings('ignore', category=ErfaWarning)
-        time = Time('1750-01-01')
-
+def get_path():
     parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     data_dir = os.path.join(parent_dir, 'data')
     os.makedirs(data_dir, exist_ok=True)
     file_path = os.path.join(data_dir, 'solsystem_data_1750.csv')
+    return file_path
+
+
+def process_data(time, writer):
+    for name in ['Sun', 'Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']:
+        pos, vel = coord.get_body_barycentric_posvel(name, time)
+
+        dist, vel = transform_data(pos, vel)
+
+        angle = np.arctan2(pos.y, pos.x).value
+
+        writer.writerow([name, f'{dist:.5f}', f'{vel:.5f}', f'{angle:.5f}'])
+
+
+def main():
+    coord.solar_system_ephemeris.set('jpl')
+
+    time = Time('1970-01-01')  # TODO: Change to 1750-01-01, but 1750 is a dubious year
+
+    file_path = get_path()
 
     with open(file_path, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['Name', 'Distance (AU)', 'Velocity (m/s)', 'Direction (radians)'])
 
-        for name in ['Sun', 'Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']:
-            pos, vel = coord.get_body_barycentric_posvel(name, time)
-
-            dist = pos - coord.get_body_barycentric_posvel('sun', time)[0]
-            angle = np.arctan2(dist.y, dist.x)
-
-            print(angle)
-
-            writer.writerow(f'{name},{dist.norm():.3f},{vel:.1f},{angle:.3f}\n')
+        process_data(time, writer)
 
 
 if __name__ == '__main__':
