@@ -1,7 +1,7 @@
 # Solsystem modell
 
 Enkel to-dimensjonal modell av solsystemet vårt. Progrmammet er laget for å svare på problemstillingen:
-**"Hvordan påvirker Neptun Uranus' bane?"**.
+**"Hvordan påvirker Neptun Uranus' bane?"**. 
 
 Programmet kan starte en solsystem simulasjon fra en vilkårlig dato med ekte data.
 ___
