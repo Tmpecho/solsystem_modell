@@ -4,6 +4,15 @@ Enkel to-dimensjonal modell av solsystemet vårt. Progrmammet er laget for å sv
 **"Hvordan påvirker Neptun Uranus' bane?"**. 
 
 Programmet kan starte en solsystem simulasjon fra en vilkårlig dato med ekte data.
+
+___
+## TODO:
+* Fjerne alle .idea filer
+* Fikse samling av ekte posisjonsdata
+* Generalisere for bruk av verktøyet til mer enn bare solsystemet, men også andre systmer i universet
+* Øke presisjon
+* Redusere lag
+
 ___
 
 ## Innhold
