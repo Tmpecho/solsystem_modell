@@ -5,14 +5,18 @@ import numpy as np
 from astropy import coordinates as coord
 from astropy import units as u
 from astropy.time import Time
+from astropy.wcs import WCS
 
 
 # FIXME: Temporary solution, but it's wrong
 def transform_data(pos, vel):
-    pos = coord.CartesianRepresentation(pos.x, pos.y, 0 * u.au)
+    # Convert the velocity to a CartesianDifferential instance
     vel = coord.CartesianDifferential(vel.x, vel.y, 0 * u.au / u.s)
+
     vel = vel.norm().to(u.m / u.s).value
-    dist = pos.norm().to(u.AU).value
+
+    # Calculate the distance from the origin to the position
+    dist = np.sqrt(pos.x ** 2 + pos.y ** 2).to(u.AU).value
 
     return dist, vel
 
@@ -39,7 +43,7 @@ def process_data(time, writer):
 def main():
     coord.solar_system_ephemeris.set('jpl')
 
-    time = Time('1970-01-01')  # TODO: Change to 1750-01-01, but 1750 is a dubious year
+    time = Time('1830-01-01')
 
     file_path = get_path()
 

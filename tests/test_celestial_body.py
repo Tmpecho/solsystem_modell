@@ -6,6 +6,7 @@ import src.config as config
 import src.solsystem_modell.celestial_body as cb
 
 
+# FIXME: Needs updating after the CelestialBody class was updated
 class TestCelestialBody(unittest.TestCase):
     def setUp(self):
         self.earth = cb.CelestialBody(cb.CelestialBodyAppearance("Earth", (0, 0, 255), 5),

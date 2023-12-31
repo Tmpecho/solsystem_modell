@@ -17,14 +17,19 @@ def create_celestial_bodies(sun_x: float, sun_y: float, file_name) -> list[Celes
             distance = float(distance) * config.AU
             velocity = float(velocity)
             direction = eval(direction.replace('pi', 'np.pi'))
-            x_pos = sun_x + distance * np.sin(direction)
-            y_pos = sun_y + distance * np.cos(direction)
+            distance = float(distance)
             max_trail_length = int(max_trail_length)
 
             # noinspection PyTypeChecker
             celestial_body_appearance = CelestialBodyAppearance(name, color, radius)
-            celestial_body_properties = CelestialBodyProperties(mass, x_pos, y_pos,
+            celestial_body_properties = CelestialBodyProperties(mass, distance,
                                                                 velocity, direction, max_trail_length)
             celestial_body = CelestialBody(celestial_body_appearance, celestial_body_properties)
             planets.append(celestial_body)
     return planets
+
+
+def polar_to_cartesian(r: float, theta: float) -> tuple:
+    x = r * np.cos(theta)
+    y = r * np.sin(theta)
+    return x, y

@@ -5,6 +5,7 @@ from typing import Optional
 import numpy as np
 
 from src import config
+from src.solsystem_modell import utils
 
 
 @dataclass
@@ -23,9 +24,8 @@ class CelestialBodyProperties:
     A class representing the appearance of a celestial body.
     """
     mass: float
-    x_pos: float
-    y_pos: float
-    velocity: float
+    distance: float
+    speed: float
     direction: float
     max_trail_length: int
 
@@ -56,10 +56,12 @@ class CelestialBody:
                 self.size = config.DEFAULT_OBJECT_SIZE * np.log(self.mass) / config.SIZE_SCALING_FACTOR * config.ZOOM
             else:
                 self.size = 0
-        self.position = np.array([celestial_body_data.x_pos, celestial_body_data.y_pos], dtype=np.float64)
-        self.velocity = np.array([celestial_body_data.velocity * np.cos(celestial_body_data.direction),
-                                  celestial_body_data.velocity * np.sin(celestial_body_data.direction)],
-                                 dtype=np.float64)
+        self.position = np.array(utils.polar_to_cartesian(
+            celestial_body_data.distance, celestial_body_data.direction - np.pi / 2),
+            dtype=np.float64)
+        self.velocity = np.array(utils.polar_to_cartesian(
+            celestial_body_data.speed, celestial_body_data.direction),
+            dtype=np.float64)
         self.max_trail_length = celestial_body_data.max_trail_length
         self.is_stationary = appearance.name == "Sun" and config.IS_SUN_STATIONARY
 
