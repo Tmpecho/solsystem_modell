@@ -63,7 +63,7 @@ class CelestialBody:
             celestial_body_data.speed, celestial_body_data.direction),
             dtype=np.float64)
         self.max_trail_length = celestial_body_data.max_trail_length
-        self.is_stationary = appearance.name == "Sun" and config.IS_SUN_STATIONARY
+        self.is_stationary = appearance.name == 'Sun' and config.IS_SUN_STATIONARY
 
         self.label_surfaces = None
         self.time_since_last_trail_update = 0
@@ -150,7 +150,7 @@ class CelestialBody:
         :param sun:
         :return:
         """
-        if self.name == "Sun":
+        if self.name == 'Sun':
             return 0
         return np.linalg.norm(self.position - sun.position)
 
@@ -172,9 +172,9 @@ class CelestialBody:
         velocity_norm = self.velocity_norm()
 
         label_lines = [
-            f"{self.name}",
-            f"Dist: {distance:.6f} AU",
-            f"Vel: {velocity_norm:.3f} m/s"
+            f'{self.name}',
+            f'Dist: {distance:.6f} AU',
+            f'Vel: {velocity_norm:.3f} m/s'
         ]
 
         self.label_surfaces = [font.render(line, True, config.WHITE) for line in label_lines]
@@ -232,7 +232,7 @@ class CelestialBodyCalculator:
         distance_vector = CelestialBodyCalculator.calculate_vector(body1, body2)
         force_distance = CelestialBodyCalculator.calculate_distance(body1, body2)
         if force_distance == 0:
-            raise ZeroDivisionError("Distance between celestial bodies cannot be zero.")
+            raise ZeroDivisionError('Distance between celestial bodies cannot be zero.')
         force_magnitude = config.GAMMA * body1.mass * body2.mass / force_distance ** 2
         force_direction = distance_vector / force_distance
         return force_magnitude * force_direction

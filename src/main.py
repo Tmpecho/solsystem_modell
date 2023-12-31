@@ -7,6 +7,8 @@ import config as config
 from src.solsystem_modell.plotter import plot_data
 from src.solsystem_modell.renderer import Renderer
 from src.solsystem_modell.simulation import Simulation
+from src.collect_planet_data import collect_planet_data
+from src.merge_new_planet_data_with_old import merge_new_planet_data
 
 
 def handle_events() -> bool:
@@ -20,7 +22,7 @@ def initialize_simulations() -> tuple:
     simulations = [Simulation() for _ in range(2)]
     renderers = [Renderer(sim) for sim in simulations]
 
-    for sim, data_file in zip(simulations, ["solsystem_data.csv", "solsystem_data_uten_neptun.csv"]):
+    for sim, data_file in zip(simulations, ['solsystem_data.csv', 'solsystem_data_uten_neptun.csv']):
         sim.initialize_simulation(config.DATA_FILE_PATH_ROOT + data_file)
 
     return simulations, renderers
@@ -34,7 +36,7 @@ def update_simulations(simulations, delta_time) -> None:
 
 # TODO: Add the ability to save data to a file
 def collect_data(simulations, sun_position) -> tuple:
-    uranus_positions = [sim.get_planet_position("Uranus") for sim in simulations]
+    uranus_positions = [sim.get_planet_position('Uranus') for sim in simulations]
 
     if all(pos is not None for pos in uranus_positions):
         distances = [np.linalg.norm(pos - sun_position) for pos in uranus_positions]
@@ -45,7 +47,7 @@ def collect_data(simulations, sun_position) -> tuple:
 
 def run_simulation(simulations, renderers):
     clock = pygame.time.Clock()
-    sun_position = simulations[0].get_planet_position("Sun")
+    sun_position = simulations[0].get_planet_position('Sun')
     time_data, distance_data1, distance_data2 = [], [], []
     total_elapsed_time = 0
 
@@ -69,6 +71,9 @@ def run_simulation(simulations, renderers):
 
 
 def main() -> None:
+    collect_planet_data()
+    merge_new_planet_data()
+
     pygame.init()
 
     simulations, renderers = initialize_simulations()
@@ -80,5 +85,5 @@ def main() -> None:
     pygame.quit()
 
 
-if __name__ == "__main__":
-    cProfile.run("main()") if config.DEBUG_MODE else main()
+if __name__ == '__main__':
+    main()

@@ -7,6 +7,8 @@ from astropy import units as u
 from astropy.time import Time
 from astropy.wcs import WCS
 
+import src.config as config
+
 
 # FIXME: Temporary solution, but it's wrong
 def transform_data(pos, vel):
@@ -31,19 +33,21 @@ def get_path():
 
 def process_data(time, writer):
     for name in ['Sun', 'Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']:
-        pos, vel = coord.get_body_barycentric_posvel(name, time)
+        pos_eq, vel_eq = coord.get_body_barycentric_posvel(name, time)
 
-        dist, vel = transform_data(pos, vel)
+        pos_ecl = coord.BarycentricMeanEcliptic(pos_eq)
+        dist = pos_ecl.distance.to(u.AU).value
+        angle = pos_ecl.lon.to(u.radian).value
 
-        angle = np.arctan2(pos.y, pos.x).value
+        vel = vel_eq.norm().to(u.m / u.s).value
 
         writer.writerow([name, f'{dist:.5f}', f'{vel:.5f}', f'{angle:.5f}'])
 
 
-def main():
+def collect_planet_data():
     coord.solar_system_ephemeris.set('jpl')
 
-    time = Time('1830-01-01')
+    time = Time(config.START_DATE)
 
     file_path = get_path()
 
@@ -55,4 +59,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    collect_planet_data()

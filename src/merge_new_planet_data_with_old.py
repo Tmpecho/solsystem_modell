@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def main():
+def merge_new_planet_data():
     # Read the CSV files
     df1 = pd.read_csv('/Users/johan/IdeaProjects/solsystem_modell//data/solsystem_data.csv')
     df2 = pd.read_csv('/Users/johan/IdeaProjects/solsystem_modell//data/solsystem_data_1750.csv')
@@ -24,4 +24,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    merge_new_planet_data()

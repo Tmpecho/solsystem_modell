@@ -26,7 +26,7 @@ class Simulation:
         self.real_width, self.real_height = self.width / config.ZOOM * scale, self.height / config.ZOOM * scale
 
         self.screen = pygame.display.set_mode((self.width, self.height), pygame.HWSURFACE)
-        pygame.display.set_caption("Planets Simulation")
+        pygame.display.set_caption('Planets Simulation')
 
         sun_x, sun_y = self.real_width / 2, self.real_height / 2
         self.celestial_bodies = create_celestial_bodies(sun_x, sun_y, file_name)
