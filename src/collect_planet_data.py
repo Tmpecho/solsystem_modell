@@ -29,7 +29,7 @@ def collect_planet_data():
 
     time = Time(config.START_DATE)
 
-    file_path = utils.get_path('solsystem_data_1750.csv')
+    file_path = utils.get_path('intermediate_solsystem_data.csv')
 
     with open(file_path, 'w', newline='') as file:
         writer = csv.writer(file)

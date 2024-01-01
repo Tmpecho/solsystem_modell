@@ -5,7 +5,7 @@ from src.solsystem_modell.utils import get_path
 
 def merge_new_planet_data():
     data_file_path = get_path('solsystem_data.csv')
-    new_data_file_path = get_path('solsystem_data_1750.csv')
+    new_data_file_path = get_path('intermediate_solsystem_data.csv')
 
     original_data = pd.read_csv(data_file_path)
     new_data = pd.read_csv(new_data_file_path)
