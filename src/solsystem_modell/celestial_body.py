@@ -11,7 +11,7 @@ from src.solsystem_modell import utils
 @dataclass
 class CelestialBodyAppearance:
     """
-    A class representing the appearance of a celestial body.
+    Represents the appearance of a celestial body.
     """
     name: str
     color: tuple[int, int, int]
@@ -21,7 +21,7 @@ class CelestialBodyAppearance:
 @dataclass
 class CelestialBodyProperties:
     """
-    A class representing the appearance of a celestial body.
+    Represents the properties of a celestial body.
     """
     mass: float
     distance: float
@@ -34,17 +34,9 @@ class CelestialBodyProperties:
 class CelestialBody:
     """
     A class representing a celestial body.
-
-    :param appearance: The appearance of the celestial body.
-    :param celestial_body_data: The data of the celestial body.
     """
 
     def __init__(self, appearance: 'CelestialBodyAppearance', celestial_body_data: 'CelestialBodyProperties') -> None:
-        """
-
-        :param appearance:
-        :param celestial_body_data:
-        """
         self.name = appearance.name
         self.color = appearance.color
 
@@ -71,103 +63,47 @@ class CelestialBody:
         self.positions = deque(maxlen=10000)
 
     def calculate_gravitational_force(self, other: 'CelestialBody') -> np.ndarray:
-        """
-
-        :param other:
-        :return:
-        """
         return CelestialBodyCalculator.calculate_gravitational_force(self, other)
 
     def calculate_distance(self, other: 'CelestialBody') -> float:
-        """
-
-        :param other:
-        :return:
-        """
         return CelestialBodyCalculator.calculate_distance(self, other)
 
     def calculate_direction(self, other: 'CelestialBody') -> float:
-        """
-
-        :param other:
-        :return:
-        """
         return CelestialBodyCalculator.calculate_direction(self, other)
 
     def calculate_vector(self, other: 'CelestialBody') -> np.ndarray:
-        """
-
-        :param other:
-        :return:
-        """
         return CelestialBodyCalculator.calculate_vector(self, other)
 
     def update_position(self, delta_time: float = None):
-        """
-
-        :param delta_time:
-        :return:
-        """
         if not self.is_stationary:
             self.update_velocity(None, delta_time)
             self.update_position_based_on_velocity(delta_time)
             self.update_trail(delta_time)
 
     def update_velocity(self, other: Optional['CelestialBody'], delta_time: float):
-        """
-
-        :param other:
-        :param delta_time:
-        :return:
-        """
         if other is not None and self.mass != 0:
             force = self.calculate_gravitational_force(other)
             acceleration = force / self.mass
             self.velocity += acceleration * delta_time
 
     def update_position_based_on_velocity(self, delta_time: float):
-        """
-
-        :param delta_time:
-        :return:
-        """
         self.position += self.velocity * delta_time
 
     def update_trail(self, delta_time: float):
-        """
-
-        :param delta_time:
-        :return:
-        """
         self.time_since_last_trail_update += delta_time / config.TIME_ACCELERATION
         if self.time_since_last_trail_update >= self.trail_update_interval:
             self.positions.append(self.position.copy())
             self.time_since_last_trail_update = 0
 
     def distance_to_sun(self, sun: 'CelestialBody') -> float:
-        """
-
-        :param sun:
-        :return:
-        """
         if self.name == 'Sun':
             return 0
         return np.linalg.norm(self.position - sun.position)
 
     def velocity_norm(self) -> float:
-        """
-
-        :return:
-        """
         return np.linalg.norm(self.velocity)
 
     def render_name(self, font, sun: 'CelestialBody') -> None:
-        """
-
-        :param font:
-        :param sun:
-        :return:
-        """
         distance = self.distance_to_sun(sun) / config.AU
         velocity_norm = self.velocity_norm()
 
@@ -182,53 +118,25 @@ class CelestialBody:
 
 class CelestialBodyCalculator:
     """
-    A class containing static methods for calculating properties of celestial bodies.
+    Contains static methods for calculating celestial body properties.
     """
 
     @staticmethod
     def calculate_vector(body1: 'CelestialBody', body2: 'CelestialBody') -> np.ndarray:
-        """
-        Calculate the vector from body1 to body2
-
-        :param body1:
-        :param body2:
-        :return:
-        """
         return body2.position - body1.position
 
     @staticmethod
     def calculate_direction(body1: 'CelestialBody', body2: 'CelestialBody') -> float:
-        """
-        Calculate the direction from body1 to body2
-
-        :param body1:
-        :param body2:
-        :return:
-        """
         vector = CelestialBodyCalculator.calculate_vector(body1, body2)
         return np.arctan2(vector[1], vector[0])
 
     @staticmethod
     def calculate_distance(body1: 'CelestialBody', body2: 'CelestialBody') -> float:
-        """
-        Calculate the distance between body1 and body2
-
-        :param body1:
-        :param body2:
-        :return:
-        """
         vector = CelestialBodyCalculator.calculate_vector(body1, body2)
         return np.linalg.norm(vector)
 
     @staticmethod
     def calculate_gravitational_force(body1: 'CelestialBody', body2: 'CelestialBody') -> np.ndarray:
-        """
-        Calculate the gravitational force between body1 and body2
-
-        :param body1:
-        :param body2:
-        :return:
-        """
         distance_vector = CelestialBodyCalculator.calculate_vector(body1, body2)
         force_distance = CelestialBodyCalculator.calculate_distance(body1, body2)
         if force_distance == 0:

@@ -1,27 +1,22 @@
 import pandas as pd
 
+from src.solsystem_modell.utils import get_path
+
 
 def merge_new_planet_data():
-    # Read the CSV files
-    df1 = pd.read_csv('/Users/johan/IdeaProjects/solsystem_modell//data/solsystem_data.csv')
-    df2 = pd.read_csv('/Users/johan/IdeaProjects/solsystem_modell//data/solsystem_data_1750.csv')
+    data_file_path = get_path('solsystem_data.csv')
+    new_data_file_path = get_path('solsystem_data_1750.csv')
 
-    # Set 'Name' column as index for both dataframes
-    df1.set_index('Name', inplace=True)
-    df2.set_index('Name', inplace=True)
+    original_data = pd.read_csv(data_file_path)
+    new_data = pd.read_csv(new_data_file_path)
 
-    # Update the values in df1 with the values from df2
-    df1.update(df2)
+    original_data.set_index('Name', inplace=True)
+    new_data.set_index('Name', inplace=True)
 
-    # Reset the index
-    df1.reset_index(inplace=True)
+    original_data.update(new_data)
 
-    # Write the updated dataframe to the solsystem_data.csv file
-    df1.to_csv('/Users/johan/IdeaProjects/solsystem_modell/data/solsystem_data.csv', index=False)
+    original_data.reset_index(inplace=True)
+    original_data.to_csv(data_file_path, index=False)
 
-    df1 = df1[:-1]
-    df1.to_csv('/Users/johan/IdeaProjects/solsystem_modell/data/solsystem_data_uten_neptun.csv', index=False)
-
-
-if __name__ == '__main__':
-    merge_new_planet_data()
+    original_data = original_data[:-1]
+    original_data.to_csv(data_file_path.replace('.csv', '_uten_neptun.csv'), index=False)

@@ -6,9 +6,8 @@ from src import config
 
 
 class Renderer:
-    """A class for rendering the simulation
-
-    :param simulation: The simulation to render
+    """
+    Handles the rendering of a celestial bodies simulation on a pygame display surface.
     """
 
     def __init__(self, simulation: 'Simulation') -> None:

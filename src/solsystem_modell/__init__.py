@@ -1,1 +1,1 @@
-__all__ = ['celestial_body', 'simulation', 'renderer', 'utils']
+__all__ = ['celestial_body', 'plotter', 'simulation', 'renderer', 'utils']

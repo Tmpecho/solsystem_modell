@@ -8,27 +8,7 @@ from astropy.time import Time
 from astropy.wcs import WCS
 
 import src.config as config
-
-
-# FIXME: Temporary solution, but it's wrong
-def transform_data(pos, vel):
-    # Convert the velocity to a CartesianDifferential instance
-    vel = coord.CartesianDifferential(vel.x, vel.y, 0 * u.au / u.s)
-
-    vel = vel.norm().to(u.m / u.s).value
-
-    # Calculate the distance from the origin to the position
-    dist = np.sqrt(pos.x ** 2 + pos.y ** 2).to(u.AU).value
-
-    return dist, vel
-
-
-def get_path():
-    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    data_dir = os.path.join(parent_dir, 'data')
-    os.makedirs(data_dir, exist_ok=True)
-    file_path = os.path.join(data_dir, 'solsystem_data_1750.csv')
-    return file_path
+import src.solsystem_modell.utils as utils
 
 
 def process_data(time, writer):
@@ -49,14 +29,10 @@ def collect_planet_data():
 
     time = Time(config.START_DATE)
 
-    file_path = get_path()
+    file_path = utils.get_path('solsystem_data_1750.csv')
 
     with open(file_path, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['Name', 'Distance (AU)', 'Velocity (m/s)', 'Direction (radians)'])
 
         process_data(time, writer)
-
-
-if __name__ == '__main__':
-    collect_planet_data()

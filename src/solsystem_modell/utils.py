@@ -1,10 +1,13 @@
-from src.solsystem_modell.celestial_body import CelestialBody, CelestialBodyAppearance, CelestialBodyProperties
-from src import config
-import numpy as np
 import csv
+import os
+
+import numpy as np
+
+from src import config
+from src.solsystem_modell.celestial_body import CelestialBody, CelestialBodyAppearance, CelestialBodyProperties
 
 
-def create_celestial_bodies(sun_x: float, sun_y: float, file_name) -> list[CelestialBody]:
+def create_celestial_bodies(file_name) -> list[CelestialBody]:
     planets = []
     with open(file_name, 'r') as file:
         reader = csv.reader(file)
@@ -33,3 +36,9 @@ def polar_to_cartesian(r: float, theta: float) -> tuple:
     x = r * np.cos(theta)
     y = r * np.sin(theta)
     return x, y
+
+
+def get_path(file_name):
+    project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    data_dir = os.path.join(project_root, 'data', file_name)
+    return data_dir

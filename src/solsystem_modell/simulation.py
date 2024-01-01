@@ -7,8 +7,8 @@ from src.solsystem_modell.utils import create_celestial_bodies
 
 class Simulation:
     """
-    A class representing the simulation
-    """
+    The Simulation class represents a simulation of celestial bodies in a solar system.
+     """
 
     def __init__(self) -> None:
         self.celestial_bodies = []
@@ -28,8 +28,7 @@ class Simulation:
         self.screen = pygame.display.set_mode((self.width, self.height), pygame.HWSURFACE)
         pygame.display.set_caption('Planets Simulation')
 
-        sun_x, sun_y = self.real_width / 2, self.real_height / 2
-        self.celestial_bodies = create_celestial_bodies(sun_x, sun_y, file_name)
+        self.celestial_bodies = create_celestial_bodies(file_name)
 
         pygame.font.init()
         # noinspection PyTypeChecker

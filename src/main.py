@@ -1,5 +1,3 @@
-import cProfile
-
 import numpy as np
 import pygame
 

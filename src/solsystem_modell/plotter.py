@@ -28,17 +28,17 @@ def plot_data(time_data, distance_data1, distance_data2, labels):
 
     # Plot for positions
     plt.figure()
-    sns.lineplot(data=data, x='Date', y=f'{labels[0]} (km)')
-    sns.lineplot(data=data, x='Date', y=f'{labels[1]} (km)')
-    plt.legend(title='Uranus', labels=[f'{label} (km)' for label in labels])
+    sns.lineplot(data=data, x='Date', y=f'{labels[0]} (km)', label=f'{labels[0]} (km)')
+    sns.lineplot(data=data, x='Date', y=f'{labels[1]} (km)', label=f'{labels[1]} (km)')
+    plt.legend(title='Uranus')
     plt.title('Distances of Uranus with and without Neptune over Time')
     plt.text(0.5, 0.02, time_elapsed_str, ha='center', va='center', transform=plt.gca().transAxes)
     plt.show()
 
     # Plot for difference
     plt.figure()
-    sns.lineplot(data=data, x='Date', y='Difference (km)', linestyle='--')
-    plt.legend(title='Uranus', labels=['Difference (km)'])
+    sns.lineplot(data=data, x='Date', y='Difference (km)', linestyle='--', label='Difference (km)')
+    plt.legend(title='Uranus')
     plt.title('Difference in Distances of Uranus with and without Neptune over Time')
     plt.text(0.5, 0.02, time_elapsed_str, ha='center', va='center', transform=plt.gca().transAxes)
     plt.show()
