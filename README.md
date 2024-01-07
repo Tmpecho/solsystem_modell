@@ -12,6 +12,7 @@ ___
 * Generalisere for bruk av verktøyet til mer enn bare solsystemet, men også andre systmer i universet
 * Øke presisjon
 * Redusere lag
+* Legge til rn hovedmeny ved programstart for å velge instillinger
 
 ___
 
