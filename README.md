@@ -43,12 +43,3 @@ csv-filene.
 Spesefikt brukes programmet i nåverende tilstand for å analysere hvordan Neptun påvirker Uranus og banen dens. Dette
 gjøres ved å kjøre to simuleringer samtidig: en med Neptun og en uten. Deretter sammenlignes resultatene fra de to
 simuleringene ved å plotte banene til Uranus i et koordinatsystem.
-___
-
-## Teknologi
-
-Avhengigheter:
-* Python 3.9.1
-* Pygame 2.0.1
-* Numpy 1.19.5
-* Matplotlib 3.3.4
